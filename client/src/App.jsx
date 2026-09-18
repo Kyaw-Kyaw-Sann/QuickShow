@@ -22,7 +22,7 @@ const App = () => {
 
   return (
     <div>
-      <Toaster/>
+      {/* <Toaster/> */}
       {!isAdminRoute && <NavBar/>}
       <Routes>
         <Route path='/' element={<Home/>} />
@@ -31,8 +31,8 @@ const App = () => {
         <Route path='/movies/:id/:date' element={<SeatLayout/>} />
         <Route path='/my-bookings' element={<MyBookings/>} />
         <Route path='/favorite' element={<Favorite/>} />
-        <Route path='/admin/*' element={<Layout/>}>
-            <Route index element={<Dashboard/>}/>
+        <Route path='/admin' element={<Layout/>}>
+            <Route path='' element={<Dashboard/>}/>
             <Route path='add-shows' element={<AddShows/>}/>
             <Route path='list-shows' element={<ListShows/>}/>
             <Route path='list-bookings' element={<ListBookings/>}/>

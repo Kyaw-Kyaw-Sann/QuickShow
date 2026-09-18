@@ -24,6 +24,7 @@ const MovieDetails = () => {
     })
     }
   }
+
   useEffect(() => {
     getShow()
   },[])
