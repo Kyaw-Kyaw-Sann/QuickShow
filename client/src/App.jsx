@@ -22,7 +22,7 @@ const App = () => {
 
   return (
     <div>
-      {/* <Toaster/> */}
+      <Toaster />
       {!isAdminRoute && <NavBar/>}
       <Routes>
         <Route path='/' element={<Home/>} />

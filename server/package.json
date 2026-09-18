@@ -4,13 +4,14 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "server": "nodemon server.js",
-    "start": "node server.js"
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "lint": "node --check server.js && node --check controllers/showController.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "QuickShow movie ticket booking API",
   "dependencies": {
     "@clerk/express": "^1.7.24",
     "axios": "^1.11.0",

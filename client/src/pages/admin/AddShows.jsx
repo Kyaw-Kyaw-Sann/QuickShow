@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { dummyShowsData } from '../../assets/assets'
 import Loading from '../../components/Loading'
 import Title from '../../components/admin/Title'
 import { CheckIcon, DeleteIcon, StarIcon } from 'lucide-react'
 import { kConverter } from '../../lib/kConverter'
+import { useAuth } from '@clerk/clerk-react'
+import { api } from '../../lib/api'
+import toast from 'react-hot-toast'
 
 const AddShows = () => {
 
     const currency = import.meta.env.VITE_CURRENCY
+    const { getToken } = useAuth()
     const [nowPlayingMovies,setNowPlayingMovies] = useState([])
     const [selectedMovie, setSelectedMovie] = useState(null)
     const [dateTimeSelection, setDateTimeSelection] = useState({})
@@ -15,7 +18,10 @@ const AddShows = () => {
     const [showPrice, setShowPrice] = useState("")
 
     const fetchNowPlayingMovies = async () => {
-        setNowPlayingMovies(dummyShowsData)
+        try {
+            const { movies } = await api('/shows/now-playing')
+            setNowPlayingMovies(movies)
+        } catch (error) { toast.error(error.message) }
     }
 
     const handleDateTimeAdd = () => {
@@ -48,6 +54,15 @@ const AddShows = () => {
                 [date]: filteredTimes,
             }
         })
+    }
+
+    const handleAddShow = async () => {
+        const showDateTimes = Object.entries(dateTimeSelection).flatMap(([date, times]) => times.map((time) => new Date(`${date}T${time}`).toISOString()))
+        if (!selectedMovie || !showPrice || !showDateTimes.length) return toast.error('Select a movie, price, and at least one show time')
+        try {
+            await api('/shows', { method: 'POST', headers: { Authorization: `Bearer ${await getToken()}` }, body: JSON.stringify({ movieId: selectedMovie, showPrice: Number(showPrice), showDateTimes }) })
+            toast.success('Shows added successfully'); setDateTimeSelection({}); setShowPrice('')
+        } catch (error) { toast.error(error.message) }
     }
 
 
@@ -132,7 +147,7 @@ const AddShows = () => {
                 </ul>
             </div>
         )}
-        <button className='bg-primary text-white px-8 py-2 mt-6 rounded
+        <button onClick={handleAddShow} className='bg-primary text-white px-8 py-2 mt-6 rounded
         hover:bg-primary/90 transition-all cursor-pointer'>
             Add Show
         </button>

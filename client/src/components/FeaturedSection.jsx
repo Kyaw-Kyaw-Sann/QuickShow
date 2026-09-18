@@ -1,14 +1,16 @@
 import { ArrowRight } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import BlurCircle from './BlurCircle'
-import { dummyShowsData } from '../assets/assets'
+import { api } from '../lib/api'
 import MovieCard from './MovieCard'
 
 
 const FeaturedSection = () => {
 
     const navigate = useNavigate()
+    const [movies, setMovies] = useState([])
+    useEffect(() => { api('/shows/now-playing').then(({ movies }) => setMovies(movies)).catch(() => setMovies([])) }, [])
 
   return (
     // xl:px-44
@@ -23,8 +25,8 @@ const FeaturedSection = () => {
         </div>
         {/* flex-wrap max-sm: */}
         <div className='flex flex-wrap pl-12 pr-12 gap-8 mt-8'> 
-            {dummyShowsData.slice(0, 4).map((show) => (
-                <MovieCard key={show._id} movie={show}/>
+            {movies.slice(0, 4).map((show) => (
+                <MovieCard key={show.id} movie={show}/>
             ))}
         </div>
 
